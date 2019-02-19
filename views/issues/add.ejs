@@ -1,0 +1,177 @@
+<% include ../partials/header %>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-secondary sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/overview">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/activity">Activity</a>
+                    </li>
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/members">Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/issues">
+                            <text class="text-info">Issues</text>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+            <br>
+            <div class="panel-heading form-control-sm">
+                <h4 class="panel-title">New Issue</h4>
+            </div>
+            <hr>
+            <form action="/projects/<%= id %>/issues/add" method="post">
+                <div class="panel-body form-control-sm">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Tracker</label>
+                        <div class="col-sm-5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tracker" value="Bug">
+                                <label class="form-check-label" for="defaultCheck">Bug</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tracker" value="Feature">
+                                <label class="form-check-label" for="defaultCheck">Feature</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tracker" disabled>
+                                <label class="form-check-label" for="defaultCheck">Support</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Subject</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control form-control-sm" id="subject" placeholder="Subject"
+                                name="subject">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Description</label>
+                        <div class="col-sm-5">
+                            <textarea class="form-control form-control-sm" id="description" placeholder="Description"
+                                name="description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Status</label>
+                        <div class="col-sm-5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" value="New">
+                                <label class="form-check-label" for="defaultCheck">New</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" disabled>
+                                <label class="form-check-label" for="defaultCheck">In Progress</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" disabled>
+                                <label class="form-check-label" for="defaultCheck">Resolved</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" disabled>
+                                <label class="form-check-label" for="defaultCheck">Feedback</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" disabled>
+                                <label class="form-check-label" for="defaultCheck">Closed</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" disabled>
+                                <label class="form-check-label" for="defaultCheck">Rejected</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Priority</label>
+                        <div class="col-sm-5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" value="Normal">
+                                <label class="form-check-label" for="defaultCheck">Normal</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" value="High">
+                                <label class="form-check-label" for="defaultCheck">High</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" value="Urgent">
+                                <label class="form-check-label" for="defaultCheck">Urgent</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" value="Immediate">
+                                <label class="form-check-label" for="defaultCheck">Immediate</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Assignee</label>
+                        <div class="col-sm-5">
+                            <select class="form-control form-control-sm" id="assignee" name="assignee">
+                                <option value="">Choose the Assignee...</option>
+                                <% users.forEach((item) => { %>
+                                <option value="<%= item.userid %>"><%= `${item.firstname} ${item.lastname}` %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Start Date</label>
+                        <div class="col-sm-5">
+                            <input type="date" class="form-control form-control-sm" id="sdate" placeholder="Start Date"
+                                name="sdate">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Due Date</label>
+                        <div class="col-sm-5">
+                            <input type="date" class="form-control form-control-sm" id="ddate" placeholder="Due Date"
+                                name="ddate">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Estimated Time</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control form-control-sm" id="etime"
+                                placeholder="Estimated Time" name="etime">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">% done</label>
+                        <div class="col-sm-5">
+                            <select class="form-control form-control-sm" id="done" name="done">
+                                <option>0</option>
+                                <option>25</option>
+                                <option>50</option>
+                                <option>75</option>
+                                <option>100</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">File</label>
+                        <div class="col-sm-5">
+                            <input type="file" class="form-control-file" name="file">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="/projects/<%= id %>/issues" class="btn btn-warning">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <canvas id="myChart" width="300" height="780" style="display: block; width: auto; height: auto;"></canvas>
+        </main>
+    </div>
+</div>
+<% include ../partials/footer %>

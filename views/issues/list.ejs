@@ -1,0 +1,174 @@
+<% include ../partials/header %>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-secondary sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/overview">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/activity">Activity</a>
+                    </li>
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/members">Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/issues">
+                        <text class="text-info">Issues</text>
+                    </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+            <br>
+            <div class="panel-heading form-control-sm">
+                <h4 class="panel-title">Filters</h4>
+            </div>
+            <hr>
+            <form class="form-horizontal" action="/projects/<%= id %>/issues" method="get">
+                <input type="hidden" name="page" value="1">
+                <div class="panel-body form-control-sm">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><input type="checkbox" id="checkid" name="checkid"
+                                <%= query.checkid ? ' checked' : '' %>> ID</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control form-control-sm" id="id" placeholder="ID" name="id"
+                                value="<%= query.id %>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><input type="checkbox" id="checksubject" name="checksubject"
+                                <%= query.checksubject ? ' checked' : '' %>> Subject</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control form-control-sm" id="subject" placeholder="Subject"
+                                name="subject" value="<%= query.subject %>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><input type="checkbox" id="checktraker"
+                                name="checkposition" <%= query.checktracker ? ' checked' : '' %>> Tracker</label>
+                        <div class="col-sm-5">
+                            <select class="form-control form-control-sm" id="traker" name="traker">
+                                <option value="">Choose the Position...</option>
+                                <option value="Bug" <%= query.tracker == 'Bug' ? ' selected' : '' %>>Bug</option>
+                                <option value="Feature"<%= query.tracker == 'Feature' ? ' selected' : '' %>>Feature</option>
+                                <option value="Support"<%= query.tracker == 'Support' ? ' selected' : '' %>>Support</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                            <a href="/projects/<%= id %>/issues" class="btn btn-warning">Reset</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <br><br><br><br><br><br><br><br>
+            <div class="panel-heading form-control-sm">
+                <h4 class="panel-title">Options</h4>
+            </div>
+            <hr>
+            <form class="form-horizontal" action="/projects/<%= id %>/issues/option" method="post">
+                <div class="panel-body form-control-sm">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Column</label>
+                        <div class="col-sm-5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="columnid" name="columnid"
+                                <%= colId ? ' checked' : '' %>>
+                                <label class="form-check-label" for="defaultCheck1">ID</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="columnsubject" name="columnsubject"
+                                <%= colSubject ? ' checked' : '' %>>
+                                <label class="form-check-label" for="defaultCheck1">Name</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="columntracker" name="columntracker"
+                                <%= colTracker ? ' checked' : '' %>>
+                                <label class="form-check-label" for="defaultCheck1">Positions</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <br><br><br><br><br>
+            <div class="panel-body form-control-sm">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="<%= colId ? '' : 'd-none' %>" scope="col">ID</th>
+                                <th class="<%= colSubject ? '' : 'd-none' %>" scope="col">Subject</th>
+                                <th class="<%= colTracker ? '' : 'd-none' %>" scope="col">Tracker</th>
+                                <th scope="col" style="text-align: center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% data.forEach((item) => { %>
+                            <tr>
+                                <td class="<%= colId ? '' : 'd-none' %>">
+                                    <%= item.issueid %>
+                                </td>
+                                <td class="<%= colSubject ? '' : 'd-none' %>">
+                                    <%= item.subject %>
+                                </td>
+                                <td class="<%= colTracker ? '' : 'd-none' %>">
+                                    <%= item.tracker %>
+                                </td>
+                                <td style="text-align: center">
+                                    <a href="/projects/<%= id %>/issues/edit/<%= item.issueid %>"
+                                        class="btn btn-success">Edit</a>
+                                    <a href="/projects/<%= id %>/issues/delete/<%= item.issueid %>" class="btn btn-danger"
+                                        onclick="return confirm('Anda yakin?');">Delete</a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <% if (pagination.page > 1) { %>
+                        <li class="page-item">
+                            <a class="page-link"
+                                href="/projects<%= pagination.url.replace(`page=${pagination.page}`, `page=${parseInt(pagination.page)-1}`) %>">Previous</a>
+                        </li>
+                        <% } %>
+
+                        <% for (let i = 1; i <= pagination.pages; i++) { %>
+                        <li class="page-item<%= pagination.page == i ? ' active': '' %>">
+                            <a class="page-link"
+                                href="/projects<%= pagination.url.replace(`page=${pagination.page}`, `page=${i}`) %>"><%= i %></a>
+                        </li>
+                        <% } %>
+
+                        <% if (pagination.page < pagination.pages) { %>
+                        <li class="page-item">
+                            <a class="page-link"
+                                href="/projects<%= pagination.url.replace(`page=${pagination.page}`, `page=${parseInt(pagination.page)+1}`) %>">Next</a>
+                        </li>
+                        <% } %>
+                    </ul>
+                </nav>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <a href="/projects/<%= id %>/issues/add" class="btn btn-primary">Add</a>
+                    </div>
+                </div>
+            </div>
+            <canvas id="myChart" width="auto" height="330" style="display: block; width: auto; height: auto;"></canvas>
+        </main>
+    </div>
+</div>
+<% include ../partials/footer %>

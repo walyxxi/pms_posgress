@@ -1,0 +1,104 @@
+<% include ../partials/header %>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-secondary sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/overview">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/activity">
+                            <text class="text-info">Activity</text></a>
+                    </li>
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/members">Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/issues">Issues</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+            <div>
+                <br>
+                <h4>Activity</h4>
+            </div>
+            <hr>
+            <div class="card">
+                <div class="card-body">
+                    <p><b>Activity</b></p>
+                    <li>From <%= moment(edate).format("DD/MM/YYYY") %> to <%= moment(sdate).format("DD/MM/YYYY") %></li>
+                    <br>
+                    <p><b>Today</b></p>
+                    <% if (dataDay1.length > 0) { %>
+                        <% dataDay1.forEach((item) => { %>
+                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <% }) %>
+                    <% } else { %>
+                        <p><i>No issues in this day!</i></p>
+                    <% } %>    
+                    <br>
+                    <p><b><%= day2 %></b></p>
+                    <% if (dataDay2.length > 0) { %>
+                        <% dataDay2.forEach((item) => { %>
+                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <% }) %>
+                    <% } else { %>
+                        <p><i>No issues in this day!</i></p>
+                    <% } %>
+                    <br>
+                    <p><b><%= day3 %></b></p>
+                    <% if (dataDay3.length > 0) { %>
+                        <% dataDay3.forEach((item) => { %>
+                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <% }) %>
+                    <% } else { %>
+                        <p><i>No issues in this day!</i></p>
+                    <% } %>
+                    <br>
+                    <p><b><%= day4 %></b></p>
+                    <% if (dataDay4.length > 0) { %>
+                        <% dataDay4.forEach((item) => { %>
+                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <% }) %>
+                    <% } else { %>
+                        <p><i>No issues in this day!</i></p>
+                    <% } %>
+                    <br>
+                    <p><b><%= day5 %></b></p>
+                    <% if (dataDay5.length > 0) { %>
+                        <% dataDay5.forEach((item) => { %>
+                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <% }) %>
+                    <% } else { %>
+                        <p><i>No issues in this day!</i></p>
+                    <% } %>
+                    <br>
+                    <p><b><%= day6 %></b></p>
+                    <% if (dataDay6.length > 0) { %>
+                        <% dataDay6.forEach((item) => { %>
+                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <% }) %>
+                    <% } else { %>
+                        <p><i>No issues in this day!</i></p>
+                    <% } %>
+                    <br>
+                    <p><b><%= day7 %></b></p>
+                    <% if (dataDay7.length > 0) { %>
+                        <% dataDay7.forEach((item) => { %>
+                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <% }) %>
+                    <% } else { %>
+                        <p><i>No issues in this day!</i></p>
+                    <% } %>
+                </div>
+            </div>
+            <canvas id="myChart" width="300" height="20" style="display: block; width: auto; height: auto;"></canvas>
+        </main>
+    </div>
+</div>
+<% include ../partials/footer %>

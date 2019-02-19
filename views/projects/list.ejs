@@ -1,0 +1,147 @@
+<% include ../partials/header %>
+<div class="container-fluid">
+    <br>
+    <div class="panel-heading form-control-sm">
+        <h4 class="panel-title">Filters</h4>
+    </div>
+    <hr>
+    <form class="form-horizontal" action="/projects" method="get">
+        <input type="hidden" name="page" value="1">
+        <div class="panel-body form-control-sm">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><input type="checkbox" id="checkid" name="checkid"
+                        <%= query.checkid ? ' checked' : '' %>> ID</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control form-control-sm" id="id" placeholder="ID" name="id"
+                        value="<%= query.id %>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><input type="checkbox" id="checkname" name="checkname"
+                        <%= query.checkname ? ' checked' : '' %>>
+                    Name</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control form-control-sm" id="name" placeholder="Name" name="name"
+                        value="<%= query.name %>">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><input type="checkbox" id="checkmember" name="checkmember"
+                        <%= query.checkmember ? ' checked' : '' %>>
+                    Member</label>
+                <div class="col-sm-5">
+                    <select class="form-control form-control-sm" id="member" name="member">
+                        <option value="">Choose the Member...</option>
+                        <% dataUser.forEach((data) => { %>
+                        <option value="<%= data.name %>" <%= query.member == data.name ? ' selected' : '' %>>
+                            <%= data.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <a href="/projects" class="btn btn-warning">Reset</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br><br><br><br><br><br><br><br>
+    <div class="panel-heading form-control-sm">
+        <h4 class="panel-title">Options</h4>
+    </div>
+    <hr>
+    <form class="form-horizontal" action="/projects/option" method="post">
+        <div class="panel-body form-control-sm">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Column</label>
+                <div class="col-sm-5">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="columnid" name="columnid"
+                            <%= colId ? ' checked' : '' %>>
+                        <label class="form-check-label" for="defaultCheck1">ID</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="columnname" name="columnname"
+                            <%= colName ? ' checked' : '' %>>
+                        <label class="form-check-label" for="defaultCheck1">Name</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="columnmember" name="columnmember"
+                            <%= colMember ? ' checked' : '' %>>
+                        <label class="form-check-label" for="defaultCheck1">Members</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br><br><br><br><br>
+    <div class="panel-body form-control-sm">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="<%= colId ? '' : 'd-none' %>" scope="col">ID</th>
+                        <th class="<%= colName ? '' : 'd-none' %>" scope="col">Name</th>
+                        <th class="<%= colMember ? '' : 'd-none' %>" scope="col">Members</th>
+                        <th scope="col" style="text-align: center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.forEach((item) => { %>
+                    <tr>
+                        <td class="<%= colId ? '' : 'd-none' %>">
+                            <a href="/projects/<%= item.projectid %>/overview"><%= item.projectid %></a>
+                        </td>
+                        <td class="<%= colName ? '' : 'd-none' %>">
+                            <%= item.name %>
+                        </td>
+                        <td class="<%= colMember ? '' : 'd-none' %>">
+                            <%= item.members.join(', ') %>
+                        </td>
+                        <td style="text-align: center">
+                            <a href="/projects/edit/<%= item.projectid %>" class="btn btn-success">Edit</a>
+                            <% if (user == 7) { %>
+                            <a href="/projects/delete/<%= item.projectid %>" class="btn btn-danger" onclick="return confirm('Anda yakin?');">Delete</a>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <% if (pagination.page > 1) { %>
+                <li class="page-item">
+                    <a class="page-link" href="/projects<%= pagination.url.replace(`page=${pagination.page}`, `page=${parseInt(pagination.page)-1}`) %>">Previous</a>
+                </li>
+                <% } %> 
+                        
+                <% for (let i = 1; i <= pagination.pages; i++) { %>
+                <li class="page-item<%= pagination.page == i ? ' active': '' %>">
+                    <a class="page-link" href="/projects<%= pagination.url.replace(`page=${pagination.page}`, `page=${i}`) %>"><%= i %></a>
+                </li>
+                <% } %>
+                
+                <% if (pagination.page < pagination.pages) { %>
+                <li class="page-item">
+                    <a class="page-link" href="/projects<%= pagination.url.replace(`page=${pagination.page}`, `page=${parseInt(pagination.page)+1}`) %>">Next</a>
+                </li>
+                <% } %>
+            </ul>
+        </nav>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <a href="/projects/add" class="btn btn-primary">Add</a>
+            </div>
+        </div>
+    </div>
+</div>
+<% include ../partials/footer %>

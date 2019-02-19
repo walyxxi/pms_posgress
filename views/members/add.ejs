@@ -1,0 +1,75 @@
+<% include ../partials/header %>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-secondary sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/overview">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/activity">Activity</a>
+                    </li>
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/members">
+                            <text class="text-info">Members</text>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/issues">Issues</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+            <br>
+            <div class="panel-heading form-control-sm">
+                <h4 class="panel-title">Add Project Member</h4>
+            </div>
+            <hr>
+            <form action="/projects/<%= id %>/members/add" method="post">
+                <div class="panel-body form-control-sm">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Project ID</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control form-control-sm" id="projectid" placeholder="Project ID"
+                                name="projectid" value="<%= id %>" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Members</label>
+                        <div class="col-sm-5">
+                            <select class="form-control form-control-sm" id="userid" name="userid">
+                                <option value="">Choose the Member...</option>
+                                <% users.forEach((item) => { %>
+                                <option value="<%= item.userid %>"><%= `${item.firstname} ${item.lastname}` %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Position</label>
+                        <div class="col-sm-5">
+                            <select class="form-control form-control-sm" id="position" name="position">
+                                <option value="">Choose the Position...</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Software Developer">Software Developer</option>
+                                <option value="Quality Assurance">Quality Assurance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="/projects/<%= id %>/members" class="btn btn-warning">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <canvas id="myChart" width="300" height="500" style="display: block; width: auto; height: auto;"></canvas>
+        </main>
+    </div>
+</div>
+<% include ../partials/footer %>

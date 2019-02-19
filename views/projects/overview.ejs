@@ -1,0 +1,58 @@
+<% include ../partials/header %>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-secondary sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/overview">
+                            <text class="text-info">Overview</text>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/activity">Activity</a>
+                    </li>
+                    <br>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/members">Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/projects/<%= id %>/issues">Issues</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="col-md-8 ml-sm-auto col-lg-10 px-4">
+            <div>
+                <br>
+                <h4>Overview</h4>
+            </div>
+            <hr>
+            <h5>Library System</h5>
+            <div class="card">
+                <div class="card-body">
+                    <p><b>Issue Tracking</b></p>
+                    <li>Bug: <%= oBug %> Open / <%= tBug %></li>
+                    <li>Feature: <%= oFeature %> Open / <%= tFeature %></li>
+                    <li>Support: <%= oSupport %> Open / <%= tSupport %></li>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <p><b>Members</b></p>
+                    <% if (data.length > 0) { %>
+                    <% data.forEach((item) => { %>
+                    <li><%= item.fullname %></li>
+                    <% }) %>
+                    <% } else { %>
+                    <text><i>No member in this project!<i></text>
+                    <% } %>
+                </div>
+            </div>
+            <canvas id="myChart" width="300" height="216" style="display: block; width: auto; height: auto;"></canvas>
+        </main>
+    </div>
+</div>
+<% include ../partials/footer %>
