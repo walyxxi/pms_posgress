@@ -557,7 +557,8 @@ module.exports = function (pool) {
 
   router.get('/:projectid/issues/add', helpers.isLoggedIn, (req, res, next) => {
     let id = req.params.projectid;
-    pool.query(`SELECT userid, firstname, lastname, position FROM users`, (err, dataUser) => {
+    pool.query(`SELECT u.userid, CONCAT(u.firstname, ' ', u.lastname) AS fullname FROM users u
+                JOIN members m ON u.userid = m.userid WHERE m.projectid = ${id}`, (err, dataUser) => {
       if (err) res.send(err);
       res.render('issues/add', {
         nav,
@@ -570,7 +571,6 @@ module.exports = function (pool) {
   })
 
   router.post('/:projectid/issues/add', (req, res, next) => {
-    // console.log(req.body);
     let id = req.params.projectid;
     let tracker = req.body.tracker;
     let subject = req.body.subject;
@@ -586,17 +586,16 @@ module.exports = function (pool) {
 
     let file = req.files.filedoc;
     let filename = file.name.toLowerCase().replace(/ /g, '');
-    let fileloc = `file_upload/${filename}`;
 
     let sql1 = `INSERT INTO issues (projectid, tracker, subject, description, status, priority,
                 assignee, startdate, duedate, estimatedtime, done, author, createddate, file) VALUES
                 (${id}, '${tracker}', '${subject}', '${description}', '${status}', '${priority}',
-                ${assignee}, '${sdate}', '${ddate}', ${etime}, ${done}, ${author}, current_timestamp, '${fileloc}')`
+                ${assignee}, '${sdate}', '${ddate}', ${etime}, ${done}, ${author}, current_timestamp, '${filename}')`
     let sql2 = `INSERT INTO activity (time, title, description, author) VALUES (current_timestamp,
                 '${subject} #${id} (${status})', '${description}', ${author})`
 
     if (req.files) {
-      file.mv(__dirname + `/../public/${fileloc}`, function (err) {
+      file.mv(`/home/walyxxi/Desktop/Challenge/pms/public/file_upload/${filename}`, function (err) {
         if (err) console.log(err)
       })
     }

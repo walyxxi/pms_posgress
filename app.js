@@ -11,6 +11,7 @@ const fileUpload = require('express-fileupload');
 var app = express();
 
 const { Pool } = require('pg');
+
 // heroku connect
 const pool = new Pool({
   user: 'wiwlmwdrxxmgcj',
@@ -19,12 +20,13 @@ const pool = new Pool({
   password: 'cf52743d070905afcdeb7e5c245c238a49ab6a77e41edffad97dfede5a033170',
   port: 5432
 })
-// local connect
+
+// // local connect
 // const pool = new Pool({
-//   user: 'wiwlmwdrxxmgcj',
-//   host: 'ec2-23-23-184-76.compute-1.amazonaws.com',
-//   database: 'ddf249amska09t',
-//   password: 'cf52743d070905afcdeb7e5c245c238a49ab6a77e41edffad97dfede5a033170',
+//   user: 'postgres',
+//   host: 'localhost',
+//   database: 'datapms',
+//   password: '142592',
 //   port: 5432
 // })
 
