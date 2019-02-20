@@ -589,7 +589,7 @@ module.exports = function (pool) {
                 (${id}, '${tracker}', '${subject}', '${description}', '${status}', '${priority}',
                 ${assignee}, '${sdate}', '${ddate}', ${etime}, ${done}, ${author}, current_timestamp)`
     let sql2 = `INSERT INTO activity (time, title, description, author) VALUES (current_timestamp,
-                '${subject} #${id} (${status})', '${description}', ${author})`           
+                '${subject} #${id} (${status})', '${description}', ${author})`
 
     pool.query(sql1, (err) => {
       if (err) res.send(err)
@@ -607,60 +607,60 @@ module.exports = function (pool) {
     pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
                 CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
                 JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[0]}'`, (err, dday1) => {
-      if (err) res.send(err);
-      pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                  CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                  JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[1]}'`, (err, dday2) => {
         if (err) res.send(err);
         pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                    CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                    JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[2]}'`, (err, dday3) => {
-          if (err) res.send(err);
-          pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                      CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                      JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[3]}'`, (err, dday4) => {
+                  CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                  JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[1]}'`, (err, dday2) => {
             if (err) res.send(err);
             pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                        CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                        JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[4]}'`, (err, dday5) => {
-              if (err) res.send(err);
-              pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                          CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                          JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[5]}'`, (err, dday6) => {
+                    CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                    JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[2]}'`, (err, dday3) => {
                 if (err) res.send(err);
                 pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
+                      CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                      JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[3]}'`, (err, dday4) => {
+                    if (err) res.send(err);
+                    pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
+                        CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                        JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[4]}'`, (err, dday5) => {
+                        if (err) res.send(err);
+                        pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
+                          CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                          JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[5]}'`, (err, dday6) => {
+                            if (err) res.send(err);
+                            pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
                             CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
                             JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[6]}'`, (err, dday7) => {
-                  if (err) res.send(err);
-                  res.render(`projects/activity`, {
-                    nav,
-                    sdate: sevenDates[0],
-                    edate: sevenDates[6],
-                    dataDay1: dday1.rows,
-                    dataDay2: dday2.rows,
-                    dataDay3: dday3.rows,
-                    dataDay4: dday4.rows,
-                    dataDay5: dday5.rows,
-                    dataDay6: dday6.rows,
-                    dataDay7: dday7.rows,
-                    day2: sevenDays[1],
-                    day3: sevenDays[2],
-                    day4: sevenDays[3],
-                    day5: sevenDays[4],
-                    day6: sevenDays[5],
-                    day7: sevenDays[6],
-                    user: req.session.user,
-                    title: 'Project Activity',
-                    moment,
-                    id
-                  })  
-                })
+                                if (err) res.send(err);
+                                res.render(`projects/activity`, {
+                                  nav,
+                                  sdate: sevenDates[0],
+                                  edate: sevenDates[6],
+                                  dataDay1: dday1.rows,
+                                  dataDay2: dday2.rows,
+                                  dataDay3: dday3.rows,
+                                  dataDay4: dday4.rows,
+                                  dataDay5: dday5.rows,
+                                  dataDay6: dday6.rows,
+                                  dataDay7: dday7.rows,
+                                  day2: sevenDays[1],
+                                  day3: sevenDays[2],
+                                  day4: sevenDays[3],
+                                  day5: sevenDays[4],
+                                  day6: sevenDays[5],
+                                  day7: sevenDays[6],
+                                  user: req.session.user,
+                                  title: 'Project Activity',
+                                  moment,
+                                  id
+                                })
+                              })
+                          })
+                      })
+                  })
               })
-            })
           })
-        })          
       })
-    })
   })
 
   router.get('/:projectid/issues/edit/:issueid', helpers.isLoggedIn, (req, res, next) => {
@@ -670,23 +670,23 @@ module.exports = function (pool) {
       if (err) res.send(err);
       pool.query(`SELECT u.userid, CONCAT(u.firstname, ' ', u.lastname) AS fullname FROM users u
                   JOIN members m ON u.userid = m.userid WHERE m.projectid = ${projectid}`, (err, dataUsers) => {
-        if (err) res.send(err);
-        pool.query(`SELECT issueid, tracker, subject FROM issues WHERE projectid = ${projectid} AND issueid
+          if (err) res.send(err);
+          pool.query(`SELECT issueid, tracker, subject FROM issues WHERE projectid = ${projectid} AND issueid
                     NOT IN (SELECT issueid FROM issues WHERE issueid = ${issueid})`, (err, allIssues) => {
-            if (err) res.send(err);
-            res.render('issues/edit', {
-              nav,
-              alliss: allIssues.rows,
-              issues: dataIssues.rows[0],
-              users: dataUsers.rows,
-              user: req.session.user,
-              title: 'Edit Project Issue',
-              projectid,
-              issueid,
-              moment
+              if (err) res.send(err);
+              res.render('issues/edit', {
+                nav,
+                alliss: allIssues.rows,
+                issues: dataIssues.rows[0],
+                users: dataUsers.rows,
+                user: req.session.user,
+                title: 'Edit Project Issue',
+                projectid,
+                issueid,
+                moment
+              })
             })
-          })
-      })
+        })
     })
   })
 
@@ -731,10 +731,10 @@ module.exports = function (pool) {
         if (err) res.send(err);
         pool.query(`INSERT INTO activity (time, title, description, author) VALUES (current_timestamp,
                     '${subject} #${id} (${status})', '${description}', ${author})`, (err) => {
-          if (err) res.send(err)
-          res.redirect(`/projects/${id}/issues`)
-        })
-      })  
+            if (err) res.send(err)
+            res.redirect(`/projects/${id}/issues`)
+          })
+      })
     }
   })
 
