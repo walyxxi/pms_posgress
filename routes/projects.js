@@ -584,12 +584,22 @@ module.exports = function (pool) {
     let done = req.body.done;
     let author = req.session.user;
 
+    let file = req.files.filedoc;
+    let filename = file.name.toLowerCase().replace(/ /g, '');
+    let fileloc = `file_upload/${filename}`;
+
     let sql1 = `INSERT INTO issues (projectid, tracker, subject, description, status, priority,
-                assignee, startdate, duedate, estimatedtime, done, author, createddate) VALUES
+                assignee, startdate, duedate, estimatedtime, done, author, createddate, file) VALUES
                 (${id}, '${tracker}', '${subject}', '${description}', '${status}', '${priority}',
-                ${assignee}, '${sdate}', '${ddate}', ${etime}, ${done}, ${author}, current_timestamp)`
+                ${assignee}, '${sdate}', '${ddate}', ${etime}, ${done}, ${author}, current_timestamp, '${fileloc}')`
     let sql2 = `INSERT INTO activity (time, title, description, author) VALUES (current_timestamp,
                 '${subject} #${id} (${status})', '${description}', ${author})`
+
+    if (req.files) {
+      file.mv(__dirname + `/../public/${fileloc}`, function (err) {
+        if (err) console.log(err)
+      })
+    }
 
     pool.query(sql1, (err) => {
       if (err) res.send(err)

@@ -6,10 +6,12 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
+const fileUpload = require('express-fileupload');
 
 var app = express();
 
 const { Pool } = require('pg');
+// heroku connect
 const pool = new Pool({
   user: 'wiwlmwdrxxmgcj',
   host: 'ec2-23-23-184-76.compute-1.amazonaws.com',
@@ -17,6 +19,14 @@ const pool = new Pool({
   password: 'cf52743d070905afcdeb7e5c245c238a49ab6a77e41edffad97dfede5a033170',
   port: 5432
 })
+// local connect
+// const pool = new Pool({
+//   user: 'wiwlmwdrxxmgcj',
+//   host: 'ec2-23-23-184-76.compute-1.amazonaws.com',
+//   database: 'ddf249amska09t',
+//   password: 'cf52743d070905afcdeb7e5c245c238a49ab6a77e41edffad97dfede5a033170',
+//   port: 5432
+// })
 
 var loginRouter = require('./routes/login')(pool);
 var projectsRouter = require('./routes/projects')(pool);
@@ -24,6 +34,7 @@ var profilesRouter = require('./routes/profiles')(pool);
 var usersRouter = require('./routes/users')(pool);
 
 // view engine setup
+app.use(fileUpload());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
