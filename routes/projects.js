@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var path = require('path');
 const helpers = require('../helpers/util');
 const moment = require('moment');
 
@@ -7,7 +8,6 @@ module.exports = function (pool) {
   var nav = 1;
   /* GET project listing. */
   router.get('/', helpers.isLoggedIn, (req, res, next) => {
-    // console.log(req.url);
     const url = req.query.page ? req.url : '/?page=1';
     // console.log(url);
     const page = req.query.page || 1;
@@ -311,7 +311,7 @@ module.exports = function (pool) {
     let params = [];
 
     if (req.query.id && req.query.checkid) {
-      params.push(`u.userid = ${req.query.id}`);
+      params.push(`m.id = ${req.query.id}`);
       searching = true;
     }
     if (req.query.name && req.query.checkname) {
@@ -319,32 +319,28 @@ module.exports = function (pool) {
       searching = true;
     }
     if (req.query.position && req.query.checkposition) {
-      params.push(`position = '${req.query.position}'`);
+      params.push(`rool = '${req.query.position}'`);
       searching = true;
     }
 
-    let sql = `SELECT COUNT(*) AS ttl FROM users u
-               JOIN members m ON u.userid = m.userid
-               JOIN projects p ON m.projectid = p.projectid
+    let sql = `SELECT COUNT(*) AS ttl FROM members m
+               JOIN users u ON m.userid = u.userid
                WHERE m.projectid = ${id}`
     if (searching) {
       sql += ` AND ${params.join(' AND ')}`
     }
 
     pool.query(sql, (err, count) => {
-      // console.log(err, count);
+      if (err) res.send(err);
       const totalData = count.rows[0].ttl;
       const pages = Math.ceil(totalData / limit);
 
-      sql = `SELECT u.userid, u.firstname, u.lastname, m.rool
-             FROM users u
-             JOIN members m ON u.userid = m.userid
-             JOIN projects p ON m.projectid = p.projectid
-             WHERE m.projectid = ${id}`
+      sql = `SELECT m.id, u.firstname, u.lastname, m.rool FROM members m
+             JOIN users u ON m.userid = u.userid WHERE m.projectid = ${id}`
       if (searching) {
         sql += ` AND ${params.join(' AND ')}`
       }
-      sql += ` LIMIT ${limit} OFFSET ${offset}`
+      sql += ` ORDER BY m.id LIMIT ${limit} OFFSET ${offset}`
 
       pool.query(sql, (err, data) => {
         if (err) res.send(err)
@@ -411,7 +407,7 @@ module.exports = function (pool) {
           title: 'Add Project Member',
           id
         })
-      })
+    })
   })
 
   router.post('/:projectid/members/add', (req, res, next) => {
@@ -425,12 +421,12 @@ module.exports = function (pool) {
     })
   })
 
-  router.get('/:projectid/members/edit/:userid', helpers.isLoggedIn, (req, res, next) => {
+  router.get('/:projectid/members/edit/:id', helpers.isLoggedIn, (req, res, next) => {
     let projectid = req.params.projectid;
-    let userid = req.params.userid;
-    let sql = `SELECT m.userid, u.firstname, u.lastname, m.rool
+    let id = req.params.id;
+    let sql = `SELECT m.id, u.firstname, u.lastname, m.rool
                FROM members m JOIN users u ON m.userid = u.userid
-               WHERE m.userid = ${userid} AND m.projectid = ${projectid}`
+               WHERE m.id = ${id} AND m.projectid = ${projectid}`
     pool.query(sql, (err, userData) => {
       if (err) res.send(err)
       res.render('members/edit', {
@@ -439,16 +435,16 @@ module.exports = function (pool) {
         users: userData.rows[0],
         user: req.session.user,
         projectid,
-        userid
+        id
       })
     })
   })
 
-  router.post('/:projectid/members/edit/:userid', (req, res, next) => {
+  router.post('/:projectid/members/edit/:id', (req, res, next) => {
     let projectid = req.params.projectid;
-    let userid = req.params.userid;
+    let id = req.params.userid;
     let role = req.body.role;
-    pool.query(`UPDATE members SET rool = '${role}' WHERE projectid = ${projectid} AND userid = ${userid}`, (err) => {
+    pool.query(`UPDATE members SET rool = '${role}' WHERE projectid = ${projectid} AND userid = ${id}`, (err) => {
       if (err) res.send(err);
       res.redirect(`/projects/${projectid}/members`)
     })
@@ -585,17 +581,17 @@ module.exports = function (pool) {
     let author = req.session.user;
 
     let file = req.files.filedoc;
-    let filename = file.name.toLowerCase().replace(/ /g, '');
+    let filename = file.name.toLowerCase().replace('', Date.now());
 
     let sql1 = `INSERT INTO issues (projectid, tracker, subject, description, status, priority,
                 assignee, startdate, duedate, estimatedtime, done, author, createddate, file) VALUES
                 (${id}, '${tracker}', '${subject}', '${description}', '${status}', '${priority}',
                 ${assignee}, '${sdate}', '${ddate}', ${etime}, ${done}, ${author}, current_timestamp, '${filename}')`
-    let sql2 = `INSERT INTO activity (time, title, description, author) VALUES (current_timestamp,
-                '${subject} #${id} (${status})', '${description}', ${author})`
+    let sql2 = `INSERT INTO activity (projectid, time, status, subject, description, author) VALUES 
+                (${id}, current_timestamp, '${status}', '${subject}', '${description}', ${author})`
 
     if (req.files) {
-      file.mv(`/home/walyxxi/Desktop/Challenge/pms/public/file_upload/${filename}`, function (err) {
+      file.mv(path.join(__dirname, `../public/file_upload/${filename}`), function (err) {
         if (err) console.log(err)
       })
     }
@@ -609,69 +605,6 @@ module.exports = function (pool) {
     })
   })
 
-  router.get('/:projectid/activity', (req, res, next) => {
-    let id = req.params.projectid;
-    let sevenDates = helpers.get7Dates();
-    let sevenDays = helpers.get7Days();
-    pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[0]}'`, (err, dday1) => {
-        if (err) res.send(err);
-        pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                  CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                  JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[1]}'`, (err, dday2) => {
-            if (err) res.send(err);
-            pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                    CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                    JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[2]}'`, (err, dday3) => {
-                if (err) res.send(err);
-                pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                      CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                      JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[3]}'`, (err, dday4) => {
-                    if (err) res.send(err);
-                    pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                        CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                        JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[4]}'`, (err, dday5) => {
-                        if (err) res.send(err);
-                        pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                          CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                          JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[5]}'`, (err, dday6) => {
-                            if (err) res.send(err);
-                            pool.query(`SELECT to_char(a.time,'HH:MM') AS hours, a.title, a.description,
-                            CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
-                            JOIN users u ON a.author = u.userid WHERE time::date = '${sevenDates[6]}'`, (err, dday7) => {
-                                if (err) res.send(err);
-                                res.render(`projects/activity`, {
-                                  nav,
-                                  sdate: sevenDates[0],
-                                  edate: sevenDates[6],
-                                  dataDay1: dday1.rows,
-                                  dataDay2: dday2.rows,
-                                  dataDay3: dday3.rows,
-                                  dataDay4: dday4.rows,
-                                  dataDay5: dday5.rows,
-                                  dataDay6: dday6.rows,
-                                  dataDay7: dday7.rows,
-                                  day2: sevenDays[1],
-                                  day3: sevenDays[2],
-                                  day4: sevenDays[3],
-                                  day5: sevenDays[4],
-                                  day6: sevenDays[5],
-                                  day7: sevenDays[6],
-                                  user: req.session.user,
-                                  title: 'Project Activity',
-                                  moment,
-                                  id
-                                })
-                              })
-                          })
-                      })
-                  })
-              })
-          })
-      })
-  })
-
   router.get('/:projectid/issues/edit/:issueid', helpers.isLoggedIn, (req, res, next) => {
     let projectid = req.params.projectid;
     let issueid = req.params.issueid;
@@ -679,23 +612,23 @@ module.exports = function (pool) {
       if (err) res.send(err);
       pool.query(`SELECT u.userid, CONCAT(u.firstname, ' ', u.lastname) AS fullname FROM users u
                   JOIN members m ON u.userid = m.userid WHERE m.projectid = ${projectid}`, (err, dataUsers) => {
-          if (err) res.send(err);
-          pool.query(`SELECT issueid, tracker, subject FROM issues WHERE projectid = ${projectid} AND issueid
+        if (err) res.send(err);
+        pool.query(`SELECT issueid, tracker, subject FROM issues WHERE projectid = ${projectid} AND issueid
                     NOT IN (SELECT issueid FROM issues WHERE issueid = ${issueid})`, (err, allIssues) => {
-              if (err) res.send(err);
-              res.render('issues/edit', {
-                nav,
-                alliss: allIssues.rows,
-                issues: dataIssues.rows[0],
-                users: dataUsers.rows,
-                user: req.session.user,
-                title: 'Edit Project Issue',
-                projectid,
-                issueid,
-                moment
-              })
-            })
+          if (err) res.send(err);
+          res.render('issues/edit', {
+            nav,
+            alliss: allIssues.rows,
+            issues: dataIssues.rows[0],
+            users: dataUsers.rows,
+            user: req.session.user,
+            title: 'Edit Project Issue',
+            projectid,
+            issueid,
+            moment
+          })
         })
+      })
     })
   })
 
@@ -712,37 +645,50 @@ module.exports = function (pool) {
     let ddate = req.body.ddate;
     let etime = req.body.etime;
     let done = req.body.done;
-    let file = req.body.file;
     let stime = req.body.stime;
     let tversion = req.body.tversion;
-    let ptask = req.body.ptask;
+    let author = req.session.user;
+
+    let ptask = null;
+    if (req.body.ptask) {
+      ptask = req.body.ptask;
+    }
+
+    let file = req.files.filedoc;
+    let filename = file.name.toLowerCase().replace('', Date.now());
 
     let sql1 = `UPDATE issues SET tracker = '${tracker}', subject = '${subject}', description = '${description}', status = '${status}',
                 priority = '${priority}', assignee = ${assignee}, startdate = '${sdate}', duedate = '${ddate}', estimatedtime = ${etime},
-                done = ${done}, file = '${file}', spenttime = ${stime}, targetversion = '${tversion}', parrenttask = ${ptask}, 
-                closeddate = current_timestamp WHERE issueid = ${issueid}`
+                done = ${done}, spenttime = ${stime}, targetversion = '${tversion}', parrenttask = ${ptask}, 
+                file = '${filename}', closeddate = current_timestamp WHERE issueid = ${issueid}`
     let sql2 = `UPDATE issues SET tracker = '${tracker}', subject = '${subject}', description = '${description}', status = '${status}',
                 priority = '${priority}', assignee = ${assignee}, startdate = '${sdate}', duedate = '${ddate}', estimatedtime = ${etime},
-                done = ${done}, file = '${file}', spenttime = ${stime}, targetversion = '${tversion}', parrenttask = ${ptask}, 
-                updateddate = current_timestamp WHERE issueid = ${issueid}`
+                done = ${done}, spenttime = ${stime}, targetversion = '${tversion}', parrenttask = ${ptask}, 
+                file = '${filename}', updateddate = current_timestamp WHERE issueid = ${issueid}`
+
+    if (req.files) {
+      file.mv(path.join(__dirname, `../public/file_upload/${filename}`), function (err) {
+        if (err) console.log(err)
+      })
+    }
 
     if (status == 'Closed') {
       pool.query(sql1, (err) => {
         if (err) res.send(err);
-        pool.query(`INSERT INTO activity (time, title, description, author) VALUES (current_timestamp,
-                    '${subject} #${id} (${status})', '${description}', ${author})`, (err) => {
-            if (err) res.send(err)
-            res.redirect(`/projects/${id}/issues`)
-          })
+        pool.query(`INSERT INTO activity (projectid, time, status, subject, description, author) VALUES 
+                    (${id}, current_timestamp, '${status}', '${subject}', '${description}', ${author})`, (err) => {
+          if (err) res.send(err)
+          res.redirect(`/projects/${id}/issues`)
+        })
       })
     } else {
       pool.query(sql2, (err) => {
         if (err) res.send(err);
-        pool.query(`INSERT INTO activity (time, title, description, author) VALUES (current_timestamp,
-                    '${subject} #${id} (${status})', '${description}', ${author})`, (err) => {
-            if (err) res.send(err)
-            res.redirect(`/projects/${id}/issues`)
-          })
+        pool.query(`INSERT INTO activity (projectid, time, status, subject, description, author) VALUES 
+                    (${id}, current_timestamp, '${status}', '${subject}', '${description}', ${author})`, (err) => {
+          if (err) res.send(err)
+          res.redirect(`/projects/${id}/issues`)
+        })
       })
     }
   })
@@ -753,6 +699,69 @@ module.exports = function (pool) {
     pool.query(`DELETE FROM issues WHERE issueid = ${issueid}`, (err) => {
       if (err) res.send(err);
       res.redirect(`/projects/${id}/issues`)
+    })
+  })
+
+  router.get('/:projectid/activity', (req, res, next) => {
+    let id = req.params.projectid;
+    let sevenDates = helpers.get7Dates();
+    let sevenDays = helpers.get7Days();
+    pool.query(`SELECT a.activityid, to_char(a.time,'HH:MM') AS hours, a.status, a.subject, a.description,
+                CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                JOIN users u ON a.author = u.userid WHERE a.projectid = ${id} AND time::date = '${sevenDates[0]}'`, (err, dday1) => {
+      if (err) res.send(err);
+      pool.query(`SELECT a.activityid, to_char(a.time,'HH:MM') AS hours, a.status, a.subject, a.description,
+                  CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                  JOIN users u ON a.author = u.userid WHERE a.projectid = ${id} AND time::date = '${sevenDates[1]}'`, (err, dday2) => {
+        if (err) res.send(err);
+        pool.query(`SELECT a.activityid, to_char(a.time,'HH:MM') AS hours, a.status, a.subject, a.description,
+                    CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                    JOIN users u ON a.author = u.userid WHERE a.projectid = ${id} AND time::date = '${sevenDates[2]}'`, (err, dday3) => {
+          if (err) res.send(err);
+          pool.query(`SELECT a.activityid, to_char(a.time,'HH:MM') AS hours, a.status, a.subject, a.description,
+                      CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                      JOIN users u ON a.author = u.userid WHERE a.projectid = ${id} AND time::date = '${sevenDates[3]}'`, (err, dday4) => {
+            if (err) res.send(err);
+            pool.query(`SELECT a.activityid, to_char(a.time,'HH:MM') AS hours, a.status, a.subject, a.description,
+                        CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                        JOIN users u ON a.author = u.userid WHERE a.projectid = ${id} AND time::date = '${sevenDates[4]}'`, (err, dday5) => {
+              if (err) res.send(err);
+              pool.query(`SELECT a.activityid, to_char(a.time,'HH:MM') AS hours, a.status, a.subject, a.description,
+                          CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                          JOIN users u ON a.author = u.userid WHERE a.projectid = ${id} AND time::date = '${sevenDates[5]}'`, (err, dday6) => {
+                if (err) res.send(err);
+                pool.query(`SELECT a.activityid, to_char(a.time,'HH:MM') AS hours, a.status, a.subject, a.description,
+                            CONCAT(u.firstname, ' ', u.lastname) AS author FROM activity a
+                            JOIN users u ON a.author = u.userid WHERE a.projectid = ${id} AND time::date = '${sevenDates[6]}'`, (err, dday7) => {
+                  if (err) res.send(err);
+                  res.render(`projects/activity`, {
+                    nav,
+                    sdate: sevenDates[0],
+                    edate: sevenDates[6],
+                    dataDay1: dday1.rows,
+                    dataDay2: dday2.rows,
+                    dataDay3: dday3.rows,
+                    dataDay4: dday4.rows,
+                    dataDay5: dday5.rows,
+                    dataDay6: dday6.rows,
+                    dataDay7: dday7.rows,
+                    day2: sevenDays[1],
+                    day3: sevenDays[2],
+                    day4: sevenDays[3],
+                    day5: sevenDays[4],
+                    day6: sevenDays[5],
+                    day7: sevenDays[6],
+                    user: req.session.user,
+                    title: 'Project Activity',
+                    moment,
+                    id
+                  })              
+                })
+              })
+            })
+          })
+        })
+      })
     })
   })
 

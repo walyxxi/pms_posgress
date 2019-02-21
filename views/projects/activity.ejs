@@ -36,7 +36,7 @@
                     <p><b>Today</b></p>
                     <% if (dataDay1.length > 0) { %>
                         <% dataDay1.forEach((item) => { %>
-                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
@@ -45,7 +45,7 @@
                     <p><b><%= day2 %></b></p>
                     <% if (dataDay2.length > 0) { %>
                         <% dataDay2.forEach((item) => { %>
-                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
@@ -54,7 +54,7 @@
                     <p><b><%= day3 %></b></p>
                     <% if (dataDay3.length > 0) { %>
                         <% dataDay3.forEach((item) => { %>
-                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
@@ -63,7 +63,7 @@
                     <p><b><%= day4 %></b></p>
                     <% if (dataDay4.length > 0) { %>
                         <% dataDay4.forEach((item) => { %>
-                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
@@ -72,7 +72,7 @@
                     <p><b><%= day5 %></b></p>
                     <% if (dataDay5.length > 0) { %>
                         <% dataDay5.forEach((item) => { %>
-                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
@@ -81,7 +81,7 @@
                     <p><b><%= day6 %></b></p>
                     <% if (dataDay6.length > 0) { %>
                         <% dataDay6.forEach((item) => { %>
-                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
@@ -90,7 +90,7 @@
                     <p><b><%= day7 %></b></p>
                     <% if (dataDay7.length > 0) { %>
                         <% dataDay7.forEach((item) => { %>
-                        <li><%= `${item.hours} ${item.title}: ${item.description}, Author: ${item.author}`%></li>
+                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>

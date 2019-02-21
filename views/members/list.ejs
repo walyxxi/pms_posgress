@@ -123,7 +123,7 @@
                             <% data.forEach((item) => { %>
                             <tr>
                                 <td class="<%= colId ? '' : 'd-none' %>">
-                                    <%= item.userid %>
+                                    <%= item.id %>
                                 </td>
                                 <td class="<%= colName ? '' : 'd-none' %>">
                                     <%= `${item.firstname} ${item.lastname}` %>
@@ -132,9 +132,9 @@
                                     <%= item.rool %>
                                 </td>
                                 <td style="text-align: center">
-                                    <a href="/projects/<%= id %>/members/edit/<%= item.userid %>"
+                                    <a href="/projects/<%= id %>/members/edit/<%= item.id %>"
                                         class="btn btn-success">Edit</a>
-                                    <a href="/projects/<%= id %>/members/delete/<%= item.userid %>" class="btn btn-danger"
+                                    <a href="/projects/<%= id %>/members/delete/<%= item.id %>" class="btn btn-danger"
                                         onclick="return confirm('Anda yakin?');">Delete</a>
                                 </td>
                             </tr>

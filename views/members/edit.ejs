@@ -29,7 +29,7 @@
                 <h4 class="panel-title">Edit Project Member</h4>
             </div>
             <hr>
-            <form action="/projects/<%= projectid %>/members/edit/<%= userid %>" method="post">
+            <form action="/projects/<%= projectid %>/members/edit/<%= id %>" method="post">
                 <div class="panel-body form-control-sm">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Project ID</label>
@@ -39,10 +39,10 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">User ID</label>
+                        <label class="col-sm-2 col-form-label">Member ID</label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control form-control-sm" id="userid" placeholder="User ID"
-                                name="userid" value="<%= userid %>" readonly>
+                            <input type="text" class="form-control form-control-sm" id="id" placeholder="Member ID"
+                                name="id" value="<%= id %>" readonly>
                         </div>
                     </div>
                     <div class="form-group row">

@@ -21,7 +21,6 @@ module.exports = {
       if (month < 10) {
         month = '0' + month;
       }
-      // YYYY-MM-DD
       dates.push(`${year}-${month}-${day}`);
       date.setDate(date.getDate() - 1);
     }
@@ -31,7 +30,6 @@ module.exports = {
   get7Days: function () {
     let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let index = new Date().getDay();
-    let date = new Date();
     let fixedDays = [];
     for (var i = 0; i < 7; i++) {
       if (index < 0) index = 6;

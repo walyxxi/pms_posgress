@@ -34,7 +34,7 @@
                 <i>This issue was closed, find another issue!</i>
             </div>
             <% } %>
-            <form action="/projects/<%= projectid %>/issues/edit/<%= issueid %>" method="post">
+            <form action="/projects/<%= projectid %>/issues/edit/<%= issueid %>" method="post" enctype="multipart/form-data">
                 <div class="panel-body form-control-sm">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Issue ID</label>
@@ -191,12 +191,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">File</label>
-                        <div class="col-sm-5">
-                            <input type="file" class="form-control-file" name="file">
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Spent Time</label>
                         <div class="col-sm-5">
                             <input type="text" class="form-control form-control-sm" id="stime" placeholder="Spent Time"
@@ -222,6 +216,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">File</label>
+                            <div class="col-sm-5">
+                                <input type="file" class="form-control-file" name="filedoc" value="<%= issues.file %>" required>
+                            </div>
+                        </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Parent Task</label>
                         <div class="col-sm-5">
                             <select class="form-control form-control-sm" id="ptask" name="ptask">
@@ -244,7 +244,7 @@
                     </div>
                 </div>
             </form>
-            <canvas id="myChart" width="300" height="1085" style="display: block; width: auto; height: auto;"></canvas>
+            <canvas id="myChart" width="300" height="1100" style="display: block; width: auto; height: auto;"></canvas>
         </main>
     </div>
 </div>

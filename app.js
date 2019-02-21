@@ -21,7 +21,7 @@ const pool = new Pool({
   port: 5432
 })
 
-// // local connect
+// local connect
 // const pool = new Pool({
 //   user: 'postgres',
 //   host: 'localhost',
