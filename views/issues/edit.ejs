@@ -34,7 +34,8 @@
                 <i>This issue was closed, find another issue!</i>
             </div>
             <% } %>
-            <form action="/projects/<%= projectid %>/issues/edit/<%= issueid %>" method="post" enctype="multipart/form-data">
+            <form action="/projects/<%= projectid %>/issues/edit/<%= issueid %>" method="post"
+                enctype="multipart/form-data">
                 <div class="panel-body form-control-sm">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Issue ID</label>
@@ -216,11 +217,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">File</label>
-                            <div class="col-sm-5">
-                                <input type="file" class="form-control-file" name="filedoc" value="<%= issues.file %>" required>
-                            </div>
+                        <label class="col-sm-2 col-form-label">File</label>
+                        <div class="col-sm-5">
+                            <a href="/file_upload/<%= issues.file %>"><%= issues.file %></a>
+                            <input type="file" class="form-control-file" name="filedoc" value="<%= issues.file %>"
+                                required>
                         </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Parent Task</label>
                         <div class="col-sm-5">
