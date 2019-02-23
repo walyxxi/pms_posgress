@@ -736,8 +736,13 @@ module.exports = function (pool) {
                   if (err) res.send(err);
                   res.render(`projects/activity`, {
                     nav,
-                    sdate: sevenDates[0],
-                    edate: sevenDates[6],
+                    date1: sevenDates[0],
+                    date2: sevenDates[1],
+                    date3: sevenDates[2],
+                    date4: sevenDates[3],
+                    date5: sevenDates[4],
+                    date6: sevenDates[5],
+                    date7: sevenDates[6],
                     dataDay1: dday1.rows,
                     dataDay2: dday2.rows,
                     dataDay3: dday3.rows,

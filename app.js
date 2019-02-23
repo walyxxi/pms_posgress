@@ -12,7 +12,7 @@ var app = express();
 
 const { Pool } = require('pg');
 
-// heroku connect
+// // heroku connect
 const pool = new Pool({
   user: 'wiwlmwdrxxmgcj',
   host: 'ec2-23-23-184-76.compute-1.amazonaws.com',

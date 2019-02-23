@@ -30,67 +30,67 @@
             <hr>
             <div class="card">
                 <div class="card-body">
-                    <p><b>Activity</b></p>
-                    <li>From <%= moment(edate).format("DD/MM/YYYY") %> to <%= moment(sdate).format("DD/MM/YYYY") %></li>
+                    <h5><b>Activity</b></h5>
+                    <li><b>From <%= moment(date7).format("DD/MM/YYYY") %> to <%= moment(date1).format("DD/MM/YYYY") %></b></li>
                     <br>
-                    <p><b>Today</b></p>
+                    <p><b>Today, <%= moment(date1).format("DD/MM/YYYY") %></b></p>
                     <% if (dataDay1.length > 0) { %>
                         <% dataDay1.forEach((item) => { %>
-                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
+                        <li><%= item.hours %> <a href="/projects/<%= id %>/issues">#<%= item.activityid %></a> <%= `(${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}` %></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
                     <% } %>    
                     <br>
-                    <p><b><%= day2 %></b></p>
+                    <p><b><%= day2 %>, <%= moment(date2).format("DD/MM/YYYY") %></b></p>
                     <% if (dataDay2.length > 0) { %>
                         <% dataDay2.forEach((item) => { %>
-                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
+                        <li><%= `${item.hours} #${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
                     <% } %>
                     <br>
-                    <p><b><%= day3 %></b></p>
+                    <p><b><%= day3 %>, <%= moment(date3).format("DD/MM/YYYY") %></b></p>
                     <% if (dataDay3.length > 0) { %>
                         <% dataDay3.forEach((item) => { %>
-                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
+                        <li><%= `${item.hours} #${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
                     <% } %>
                     <br>
-                    <p><b><%= day4 %></b></p>
+                    <p><b><%= day4 %>, <%= moment(date4).format("DD/MM/YYYY") %></b></p>
                     <% if (dataDay4.length > 0) { %>
                         <% dataDay4.forEach((item) => { %>
-                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
+                        <li><%= `${item.hours} #${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
                     <% } %>
                     <br>
-                    <p><b><%= day5 %></b></p>
+                    <p><b><%= day5 %>, <%= moment(date5).format("DD/MM/YYYY") %></b></p>
                     <% if (dataDay5.length > 0) { %>
                         <% dataDay5.forEach((item) => { %>
-                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
+                        <li><%= `${item.hours} #${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
                     <% } %>
                     <br>
-                    <p><b><%= day6 %></b></p>
+                    <p><b><%= day6 %>, <%= moment(date6).format("DD/MM/YYYY") %></b></p>
                     <% if (dataDay6.length > 0) { %>
                         <% dataDay6.forEach((item) => { %>
-                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
+                        <li><%= `${item.hours} #${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
                     <% } %>
                     <br>
-                    <p><b><%= day7 %></b></p>
+                    <p><b><%= day7 %>, <%= moment(date7).format("DD/MM/YYYY") %></b></p>
                     <% if (dataDay7.length > 0) { %>
                         <% dataDay7.forEach((item) => { %>
-                        <li><%= `#${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
+                        <li><%= `${item.hours} #${item.activityid} (${item.status}) ${item.subject}: "${item.description}", Author: ${item.author}`%></li>
                         <% }) %>
                     <% } else { %>
                         <p><i>No issues in this day!</i></p>
